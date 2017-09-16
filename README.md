@@ -25,3 +25,28 @@ Ce qui reste à faire :
 * Valider la qualité des tables dérivées des tables brutes issues du chargement
 * Valider la méthode de calcul du véhicule impliqué (premier jet bientôt)
 * Faire un outil web d'interrogation dynamique des données + graphiques
+
+# Marche à suivre
+Les indications ci-dessous sont minimalistes, tout n'est pas décrit loin de là.
+
+Cloner le dépot, compléter l'arborescence comme ci-dessous :
+```
+.
+├── chargement
+│   ├── divers
+│   ├── donnees_brutes
+│   │   └── log
+│   ├── reencode
+│   └── scripts
+└── sql
+    ├── exploration
+    └── verifications
+```
+
+Placer toutes les sources dans le répertoire donnees_brutes
+
+Exécuter le script bash conv.bash
+
+Créer la base de données accident
+
+Lancer le chargement avec charge.py
