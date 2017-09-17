@@ -13,11 +13,11 @@ Ce qui est réalisé :
 * Charger les fichiers plats dans la base postgresql
 * Charger la nomenclature réalisée à la main à partir du pdf explicatif de l'ONSISR
 * Charger les tables communes, département et région de l'Insee
+* Mise à disposition des données brutes compressées dans une archive zip unique http://base_accidents.zortnar.com/donnees_brutes.zip
 
 Ce qui reste à faire :
 
 * Mise à disposition d'archives compressées pour ceux qui voudraient aller plus vite que de tout rejouer :
-	* Fichiers source
 	* dumps de base de données
 	* la base de données elle même
 * Valider la qualité des chargements
