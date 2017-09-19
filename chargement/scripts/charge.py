@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
+import sys
+
 import pandas as pd
 import sqlalchemy as sqlalchemy
 
@@ -11,6 +14,7 @@ engine = create_engine('postgresql://loader:loader_password@localhost:5433/accid
 metadata = MetaData(engine)
 Base = declarative_base()
 path_to_data='../reencode'
+path_to_log='../donnees_brutes/log'
 annee_max=2016
 
 
@@ -21,30 +25,30 @@ def lieux(annee):
 	df = pd.read_csv('%s/lieux_%s.csv' % (path_to_data, annee), encoding='utf-8', sep=",", dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("lieux_%s" % annee,
-	        engine,
-					schema='chargement', 
+	    engine,
+		schema='chargement', 
 		if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-	        index=False, #Do not output the index of the dataframe
-	        dtype={
-					'num_acc': sqlalchemy.types.String,
-					'catr': sqlalchemy.types.String,
-					'voie': sqlalchemy.types.String,
-					'v1': sqlalchemy.types.String,
-					'v2': sqlalchemy.types.String,
-					'circ': sqlalchemy.types.String,
-					'nbv': sqlalchemy.types.NUMERIC,
-					'pr': sqlalchemy.types.String,
-					'pr1': sqlalchemy.types.String,
-					'vosp': sqlalchemy.types.String,
-					'prof': sqlalchemy.types.String,
-					'plan': sqlalchemy.types.String,
-					'lartpc': sqlalchemy.types.NUMERIC,
-					'larrout': sqlalchemy.types.NUMERIC,
-					'surf': sqlalchemy.types.String,
-					'infra': sqlalchemy.types.String,
-					'situ': sqlalchemy.types.String,
-					'env1': sqlalchemy.types.String
-					})
+	    index=False, #Do not output the index of the dataframe
+	    dtype={
+			'num_acc': sqlalchemy.types.String,
+			'catr': sqlalchemy.types.String,
+			'voie': sqlalchemy.types.String,
+			'v1': sqlalchemy.types.String,
+			'v2': sqlalchemy.types.String,
+			'circ': sqlalchemy.types.String,
+			'nbv': sqlalchemy.types.NUMERIC,
+			'pr': sqlalchemy.types.String,
+			'pr1': sqlalchemy.types.String,
+			'vosp': sqlalchemy.types.String,
+			'prof': sqlalchemy.types.String,
+			'plan': sqlalchemy.types.String,
+			'lartpc': sqlalchemy.types.NUMERIC,
+			'larrout': sqlalchemy.types.NUMERIC,
+			'surf': sqlalchemy.types.String,
+			'infra': sqlalchemy.types.String,
+			'situ': sqlalchemy.types.String,
+			'env1': sqlalchemy.types.String
+			})
 	with engine.connect() as con:
 	    con.execute('ALTER TABLE chargement.lieux_%s ADD PRIMARY KEY (num_acc);' % annee)
 
@@ -58,28 +62,28 @@ def caracteristiques(annee):
 	df = pd.read_csv('%s/caracteristiques_%s.csv' % (path_to_data, annee), encoding='utf-8', sep=separateur, dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("caracteristiques_%s" % annee, 
-	          engine,
-						schema='chargement',
-	          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-	          index=False, #Do not output the index of the dataframe
-	          dtype={
-					'num_acc': sqlalchemy.types.String,
-					'an': sqlalchemy.types.String,
-					'mois': sqlalchemy.types.String,
-					'jour': sqlalchemy.types.String,
-					'hrmn': sqlalchemy.types.String,
-					'lum': sqlalchemy.types.String,
-					'agg': sqlalchemy.types.String,
-					'int': sqlalchemy.types.String,
-					'atm': sqlalchemy.types.String,
-					'col': sqlalchemy.types.String,
-					'com': sqlalchemy.types.String,
-					'adr': sqlalchemy.types.String,
-					'gps': sqlalchemy.types.String,
-					'lat': sqlalchemy.types.String,
-					'long': sqlalchemy.types.String,
-					'dep': sqlalchemy.types.String
-					})
+	        engine,
+			schema='chargement',
+	        if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+	        index=False, #Do not output the index of the dataframe
+	        dtype={
+				'num_acc': sqlalchemy.types.String,
+				'an': sqlalchemy.types.String,
+				'mois': sqlalchemy.types.String,
+				'jour': sqlalchemy.types.String,
+				'hrmn': sqlalchemy.types.String,
+				'lum': sqlalchemy.types.String,
+				'agg': sqlalchemy.types.String,
+				'int': sqlalchemy.types.String,
+				'atm': sqlalchemy.types.String,
+				'col': sqlalchemy.types.String,
+				'com': sqlalchemy.types.String,
+				'adr': sqlalchemy.types.String,
+				'gps': sqlalchemy.types.String,
+				'lat': sqlalchemy.types.String,
+				'long': sqlalchemy.types.String,
+				'dep': sqlalchemy.types.String
+				})
 
 	with engine.connect() as con:
 	    con.execute('ALTER TABLE chargement.caracteristiques_%s ADD PRIMARY KEY (num_acc);' % annee)
@@ -90,24 +94,24 @@ def usagers(annee):
 	df = pd.read_csv('%s/usagers_%s.csv' % (path_to_data, annee), encoding='utf-8', sep=",", dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("usagers_%s" % annee, 
-          engine,
-					schema='chargement',
-          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-          index=False, #Do not output the index of the dataframe
-          dtype={
-					'num_acc': sqlalchemy.types.String,
-					'place': sqlalchemy.types.String,
-					'catu': sqlalchemy.types.String,
-					'grav': sqlalchemy.types.String,
-					'sexe': sqlalchemy.types.String,
-					'trajet': sqlalchemy.types.String,
-					'secu': sqlalchemy.types.String,
-					'locp': sqlalchemy.types.String,
-					'actp': sqlalchemy.types.String,
-					'etatp': sqlalchemy.types.String,
-					'an_nais': sqlalchemy.types.NUMERIC,
-					'num_veh': sqlalchemy.types.String
-					})
+        engine,
+		schema='chargement',
+        if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+        index=False, #Do not output the index of the dataframe
+        dtype={
+			'num_acc': sqlalchemy.types.String,
+			'place': sqlalchemy.types.String,
+			'catu': sqlalchemy.types.String,
+			'grav': sqlalchemy.types.String,
+			'sexe': sqlalchemy.types.String,
+			'trajet': sqlalchemy.types.String,
+			'secu': sqlalchemy.types.String,
+			'locp': sqlalchemy.types.String,
+			'actp': sqlalchemy.types.String,
+			'etatp': sqlalchemy.types.String,
+			'an_nais': sqlalchemy.types.NUMERIC,
+			'num_veh': sqlalchemy.types.String
+			})
 
 
 def vehicules(annee):
@@ -116,24 +120,25 @@ def vehicules(annee):
 	df = pd.read_csv('%s/vehicules_%s.csv' % (path_to_data, annee), encoding='utf-8', sep=",", dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("vehicules_%s" % annee, 
-          engine,
-					schema='chargement',
-          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-          index=False, #Do not output the index of the dataframe
-          dtype={
-					'num_acc': sqlalchemy.types.String,
-					'senc': sqlalchemy.types.String,
-					'catv': sqlalchemy.types.String,
-					'occutc': sqlalchemy.types.NUMERIC,
-					'obs': sqlalchemy.types.String,
-					'obsm': sqlalchemy.types.String,
-					'choc': sqlalchemy.types.String,
-					'manv': sqlalchemy.types.String,
-					'num_veh': sqlalchemy.types.String
-					})
+        engine,
+		schema='chargement',
+        if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+        index=False, #Do not output the index of the dataframe
+        dtype={
+			'num_acc': sqlalchemy.types.String,
+			'senc': sqlalchemy.types.String,
+			'catv': sqlalchemy.types.String,
+			'occutc': sqlalchemy.types.NUMERIC,
+			'obs': sqlalchemy.types.String,
+			'obsm': sqlalchemy.types.String,
+			'choc': sqlalchemy.types.String,
+			'manv': sqlalchemy.types.String,
+			'num_veh': sqlalchemy.types.String
+			})
 
 	with engine.connect() as con:
 	    con.execute('CREATE INDEX on chargement.vehicules_%s (num_acc,num_veh);' % annee)
+	    con.execute('grant ALL privileges on chargement.vehicules_%s to developer;' % annee)
 
 def nomenclature():
 	print ('%s/nomenclature.csv' % path_to_data)
@@ -145,12 +150,12 @@ def nomenclature():
 	          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
 	          index=False, #Do not output the index of the dataframe
 	          dtype={
-					'tableau': sqlalchemy.types.String,
-					'colonne': sqlalchemy.types.String,
-					'libelle': sqlalchemy.types.String,
-					'code_modalite': sqlalchemy.types.String,
-					'libelle_modalite': sqlalchemy.types.String
-					})
+				'tableau': sqlalchemy.types.String,
+				'colonne': sqlalchemy.types.String,
+				'libelle': sqlalchemy.types.String,
+				'code_modalite': sqlalchemy.types.String,
+				'libelle_modalite': sqlalchemy.types.String
+				})
 	with engine.connect() as con:
 	    con.execute('CREATE UNIQUE INDEX on nomenclature (tableau,colonne,libelle,code_modalite);')
 
@@ -160,19 +165,20 @@ def region():
 	df = pd.read_csv('%s/reg2016.txt' % path_to_data, encoding='utf-8', sep="\t",dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("region", 
-	          engine,
-						schema='chargement', 
-	          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-	          index=False, #Do not output the index of the dataframe
-	          dtype={
-						'REGION': sqlalchemy.types.String,
-						'CHEFLIEU': sqlalchemy.types.String,
-						'TNCC': sqlalchemy.types.String,
-						'NCC': sqlalchemy.types.String,
-						'NCCENR': sqlalchemy.types.String
+	        engine,
+			schema='chargement', 
+	        if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+	        index=False, #Do not output the index of the dataframe
+	        dtype={
+					'REGION': sqlalchemy.types.String,
+					'CHEFLIEU': sqlalchemy.types.String,
+					'TNCC': sqlalchemy.types.String,
+					'NCC': sqlalchemy.types.String,
+					'NCCENR': sqlalchemy.types.String
 					})
 	with engine.connect() as con:
 	    con.execute('CREATE UNIQUE INDEX on chargement.region (REGION);')
+	    con.execute('grant ALL privileges on chargement.region to developer;')
 
 def departement():
 	print ('%s/dept2016.txt' % path_to_data)
@@ -180,73 +186,103 @@ def departement():
 	df = pd.read_csv('%s/depts2016.txt' % path_to_data, encoding='utf-8', sep="\t",dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("departement", 
-	          engine,
-						schema='chargement', 
-	          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-	          index=False, #Do not output the index of the dataframe
-	          dtype={
-					'REGION': sqlalchemy.types.String,
-					'DEP': sqlalchemy.types.String,
-					'CHEFLIEU': sqlalchemy.types.String,
-					'TNCC': sqlalchemy.types.String,
-					'NCC': sqlalchemy.types.String,
-					'NCCENR': sqlalchemy.types.String
-					})
+	        engine,
+			schema='chargement', 
+	        if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+	        index=False, #Do not output the index of the dataframe
+	        dtype={
+				'REGION': sqlalchemy.types.String,
+				'DEP': sqlalchemy.types.String,
+				'CHEFLIEU': sqlalchemy.types.String,
+				'TNCC': sqlalchemy.types.String,
+				'NCC': sqlalchemy.types.String,
+				'NCCENR': sqlalchemy.types.String
+				})
 	with engine.connect() as con:
 	    con.execute('CREATE UNIQUE INDEX on chargement.departement (DEP);')
+	    con.execute('grant ALL privileges on chargement.departement to developer;')
 
 def commune():
 	print ('%s/france2016.txt' % path_to_data)
-	dtype_dic= {	'ACTUAL': str,
-								'CHEFLIEU': str,
-								'CDC': str,
-								'RANG': str,
-								'REG': str,
-								'DEP': str,
-								'COM': str,
-								'AR': str,
-								'CT': str,
-								'MODIF': str,
-								'POLE': str,
-								'TNCC': str,
-								'ARTMAJ': str,
-								'NCC': str,
-								'ARTMIN': str,
-								'NCCENR': str,
-								'ARTICLCT': str,
-								'NCCCT': str
-								}
+	dtype_dic= {
+		'ACTUAL': str,
+		'CHEFLIEU': str,
+		'CDC': str,
+		'RANG': str,
+		'REG': str,
+		'DEP': str,
+		'COM': str,
+		'AR': str,
+		'CT': str,
+		'MODIF': str,
+		'POLE': str,
+		'TNCC': str,
+		'ARTMAJ': str,
+		'NCC': str,
+		'ARTMIN': str,
+		'NCCENR': str,
+		'ARTICLCT': str,
+		'NCCCT': str
+		}
 	df = pd.read_csv('%s/france2016.txt' % path_to_data, encoding='utf-8', sep="\t",dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
 	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
 	df.to_sql("commune", 
-	          engine,
-						schema='chargement', 
-	          if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
-	          index=False, #Do not output the index of the dataframe
-	          dtype={
-						'ACTUAL': sqlalchemy.types.String,
-						'CHEFLIEU': sqlalchemy.types.String,
-						'CDC': sqlalchemy.types.String,
-						'RANG': sqlalchemy.types.String,
-						'REG': sqlalchemy.types.String,
-						'DEP': sqlalchemy.types.String,
-						'COM': sqlalchemy.types.String,
-						'AR': sqlalchemy.types.String,
-						'CT': sqlalchemy.types.String,
-						'MODIF': sqlalchemy.types.String,
-						'POLE': sqlalchemy.types.String,
-						'TNCC': sqlalchemy.types.String,
-						'ARTMAJ': sqlalchemy.types.String,
-						'NCC': sqlalchemy.types.String,
-						'ARTMIN': sqlalchemy.types.String,
-						'NCCENR': sqlalchemy.types.String,
-						'ARTICLCT': sqlalchemy.types.String,
-						'NCCCT': sqlalchemy.types.String
-					})
+	    engine,
+		schema='chargement', 
+	    if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+	    index=False, #Do not output the index of the dataframe
+	    dtype={
+			'ACTUAL': sqlalchemy.types.String,
+			'CHEFLIEU': sqlalchemy.types.String,
+			'CDC': sqlalchemy.types.String,
+			'RANG': sqlalchemy.types.String,
+			'REG': sqlalchemy.types.String,
+			'DEP': sqlalchemy.types.String,
+			'COM': sqlalchemy.types.String,
+			'AR': sqlalchemy.types.String,
+			'CT': sqlalchemy.types.String,
+			'MODIF': sqlalchemy.types.String,
+			'POLE': sqlalchemy.types.String,
+			'TNCC': sqlalchemy.types.String,
+			'ARTMAJ': sqlalchemy.types.String,
+			'NCC': sqlalchemy.types.String,
+			'ARTMIN': sqlalchemy.types.String,
+			'NCCENR': sqlalchemy.types.String,
+			'ARTICLCT': sqlalchemy.types.String,
+			'NCCCT': sqlalchemy.types.String
+		})
 	with engine.connect() as con:
 		con.execute('CREATE UNIQUE INDEX on chargement.commune (actual,dep,COM,CT);')
+		con.execute('grant ALL privileges on chargement.commune to developer;')
 
-# charger les données accident
+def comptage():
+	print ('%s/comptage.log' % path_to_log)
+	dtype_dic= {
+		'fichier': str,
+		'nb_lignes': str,
+		'date_comptage': str
+	}
+	df = pd.read_csv('%s/comptage.log' % path_to_log, encoding='utf-8', sep=",",dtype=dtype_dic, error_bad_lines = False, warn_bad_lines = True)
+	df.columns = [c.lower() for c in df.columns] #postgres doesn't like capitals or spaces
+	df.to_sql("comptage", 
+	    engine,
+		schema='public', 
+	    if_exists="replace",  #options are ‘fail’, ‘replace’, ‘append’, default ‘fail’
+	    index=False, #Do not output the index of the dataframe
+	    dtype={
+			'fichier': sqlalchemy.types.String,
+			'nb_lignes': sqlalchemy.types.String,
+			'date_comptage': sqlalchemy.types.String
+			})
+	with engine.connect() as con:
+	 	con.execute('CREATE UNIQUE INDEX on public.comptage (fichier);')
+	 	con.execute('grant select on public.comptage to developer;')
+	 	
+# charger le résultat des comptages
+
+comptage()
+#sys.exit(0)
+#charger les données accident
 for i in range(2005,annee_max+1):
 	print "traitement de",i
 	lieux(i)

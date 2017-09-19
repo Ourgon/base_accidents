@@ -2,3 +2,4 @@ chargement/donnees_brutes/
 chargement/reencode/
 .project
 .dbeaver-data-sources.xml
+*.zip
